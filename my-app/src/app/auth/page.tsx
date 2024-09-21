@@ -6,10 +6,13 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
-import { Button, IconButton, InputAdornment, InputLabel, OutlinedInput, FormHelperText  } from '@mui/material';
+import { Button, IconButton, InputAdornment, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
+import { signInService } from '@/shared/services/auth.service'
+import Swal from 'sweetalert2';
+import { setCookie } from "cookies-next";
 
 interface ILogin {
   email: string;
@@ -27,7 +30,18 @@ const AuthPage: React.FC = () => {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = (data: ILogin) => {
-    console.log(data)
+    signInService(data).then((response) => {
+      const resService = response.data;
+      if (resService.isSuccess === true) {
+        Swal.fire({
+          title: "Sign in Success",
+          icon: "success"
+        });
+        setCookie("access_token", resService.result.accessToken);
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   return (
