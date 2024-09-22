@@ -12,7 +12,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { signInService } from '@/shared/services/auth.service'
 import Swal from 'sweetalert2';
-import { setCookie } from "cookies-next";
+import { setCredentialService } from '@/shared/services/session.service';
+import { redirectPage } from '@/shared/constant/redirect'
+import { useRouter } from 'next/navigation'
+import LinearProgress from '@mui/material/LinearProgress';
+
 
 interface ILogin {
   email: string;
@@ -20,7 +24,9 @@ interface ILogin {
 }
 
 const AuthPage: React.FC = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [progress, setProgress] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -30,16 +36,22 @@ const AuthPage: React.FC = () => {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = (data: ILogin) => {
+    setProgress(true);
     signInService(data).then((response) => {
       const resService = response.data;
       if (resService.isSuccess === true) {
         Swal.fire({
-          title: "Sign in Success",
-          icon: "success"
+          text: "Sign in Success",
+          icon: "success",
+          backdrop: false,
+          timer: 3000,
         });
-        setCookie("access_token", resService.result.accessToken);
+
+        setCredentialService(resService.result);
+        router.push(redirectPage.shopPage.index);
       }
     }).catch((error) => {
+      setProgress(false);
       console.log(error);
     })
   }
@@ -47,6 +59,7 @@ const AuthPage: React.FC = () => {
   return (
     <div className="flex">
       <Card sx={{ maxWidth: 650, maxHeight: 500, padding: 5 }} className='min-w-96 max-w-full self-center min-h-96 max-h-full'>
+        {progress && <LinearProgress></LinearProgress>}
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" align='center'>
             SING IN
@@ -97,8 +110,6 @@ const AuthPage: React.FC = () => {
               <Button variant="outlined" sx={{ width: 150, height: 45 }} type='submit'>
                 Sing in
               </Button>
-
-              {/* </FormGroup> */}
             </Box>
           </form>
         </CardContent>
