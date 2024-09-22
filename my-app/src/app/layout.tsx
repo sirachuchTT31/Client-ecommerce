@@ -1,19 +1,26 @@
 import React from 'react';
 import './globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { Roboto } from 'next/font/google';
+import { Kanit } from 'next/font/google';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../theme';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 
+// const roboto = Roboto({
+//   weight: ['300', '400', '500', '700'],
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-roboto',
+// });
 
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
+const kanit = Kanit({
+  subsets: ['latin', 'thai'],
+  weight: ['200', '300', '400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-roboto',
+  variable: '--font-kanit',
 });
+
 
 
 export const metadata = {
@@ -27,13 +34,12 @@ interface LayoutProps {
 
 
 
-const RootLayout: React.FC<LayoutProps> = async ({ children }) => {
+const RootLayout: React.FC<LayoutProps> = async ({ children, }) => {
   const locale = await getLocale();
-
   const messages = await getMessages();
   return (
     <html lang={locale}>
-      <body className={roboto.variable}>
+      <body className={kanit.variable}>
         <NextIntlClientProvider messages={messages}>
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
