@@ -16,7 +16,7 @@ import { setCredentialService } from '@/shared/services/session.service';
 import { redirectPage } from '@/shared/constant/redirect'
 import { useRouter } from 'next/navigation'
 import LinearProgress from '@mui/material/LinearProgress';
-
+import { useTranslations } from 'next-intl';
 
 interface ILogin {
   email: string;
@@ -27,6 +27,7 @@ const AuthPage: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = React.useState(false);
   const [progress, setProgress] = React.useState(false);
+  const transalate = useTranslations("AUTH");
   const {
     register,
     handleSubmit,
@@ -62,7 +63,7 @@ const AuthPage: React.FC = () => {
         {progress && <LinearProgress></LinearProgress>}
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" align='center'>
-            SING IN
+            {transalate('SIGN_IN')}
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
