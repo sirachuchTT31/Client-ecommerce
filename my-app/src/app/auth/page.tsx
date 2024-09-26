@@ -12,7 +12,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { signInService } from '@/shared/services/auth.service'
 import Swal from 'sweetalert2';
-// import { setCredentialService } from '@/shared/services/session.service';
+import { setCredentialService } from '@/shared/services/session.service';
 import { redirectPage } from '@/shared/constant/redirect'
 import { useRouter } from 'next/navigation'
 import LinearProgress from '@mui/material/LinearProgress';
@@ -50,7 +50,7 @@ const AuthPage: React.FC = () => {
             timer: 3000,
           });
 
-          // setCredentialService(resService.result);
+          setCredentialService(resService.result);
           router.push(redirectPage.shopPage.index);
         }
         else {

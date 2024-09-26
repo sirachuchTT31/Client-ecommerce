@@ -6,8 +6,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from '../theme';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
-import { ApolloProvider } from '@apollo/client';
-import clientGraphQL from '@/shared/services/graphql.service';
 
 // const roboto = Roboto({
 //   weight: ['300', '400', '500', '700'],
@@ -45,9 +43,7 @@ const RootLayout: React.FC<LayoutProps> = async ({ children, }) => {
         <NextIntlClientProvider messages={messages}>
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
-              <ApolloProvider client={clientGraphQL}>
                 {children}
-              </ApolloProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>
         </NextIntlClientProvider>
