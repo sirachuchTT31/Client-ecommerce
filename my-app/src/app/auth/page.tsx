@@ -6,17 +6,18 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
-import { Button, IconButton, InputAdornment, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
+import {  IconButton, InputAdornment, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from 'react-hook-form';
 import { signInService } from '@/shared/services/auth.service'
 import Swal from 'sweetalert2';
-import { setCredentialService } from '@/shared/services/session.service';
+// import { setCredentialService } from '@/shared/services/session.service';
 import { redirectPage } from '@/shared/constant/redirect'
 import { useRouter } from 'next/navigation'
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTranslations } from 'next-intl';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 interface ILogin {
   email: string;
@@ -36,25 +37,42 @@ const AuthPage: React.FC = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const onSubmit = (data: ILogin) => {
+  const onSubmit = async (data: ILogin) => {
     setProgress(true);
-    signInService(data).then((response) => {
-      const resService = response.data;
-      if (resService.isSuccess === true) {
+    setTimeout(async () => {
+      await signInService(data).then((response) => {
+        const resService = response.data;
+        if (resService.isSuccess === true) {
+          Swal.fire({
+            text: transalate('SWAL2.SIGN_IN_SUCCESS'),
+            icon: "success",
+            backdrop: false,
+            timer: 3000,
+          });
+
+          // setCredentialService(resService.result);
+          router.push(redirectPage.shopPage.index);
+        }
+        else {
+          setProgress(false);
+          Swal.fire({
+            text: transalate('SWAL2.SIGN_IN_FAIL'),
+            icon: "error",
+            backdrop: false,
+            timer: 3000,
+          });
+        }
+      }).catch((error) => {
+        setProgress(false);
         Swal.fire({
-          text: "Sign in Success",
-          icon: "success",
+          text: `${transalate('SWAL2.SIGN_IN_FAIL_SERVER_ERROR')}`,
+          icon: "error",
           backdrop: false,
           timer: 3000,
-        });
-
-        setCredentialService(resService.result);
-        router.push(redirectPage.shopPage.index);
-      }
-    }).catch((error) => {
-      setProgress(false);
-      console.log(error);
-    })
+        })
+        console.log(error);
+      })
+    }, 3000)
   }
 
   return (
@@ -69,7 +87,7 @@ const AuthPage: React.FC = () => {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 2 }}>
 
               <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
-                <TextField id="outlined-basic email" label="Email" placeholder='Email' error={errors.email && errors.email.message}  {...register('email', {
+                <TextField id="outlined-basic email" label="Email" placeholder='Email' error={errors.email && errors.email.message ? true : false}  {...register('email', {
                   required: 'Email is required',
                   pattern: {
                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -77,11 +95,9 @@ const AuthPage: React.FC = () => {
                   },
                 })} helperText={errors.email && errors.email.message}></TextField>
               </FormControl>
-
-              <FormControl fullWidth sx={{ m: 1 }} variant="outlined" error={errors.password && errors.password.message}>
+              <FormControl fullWidth sx={{ m: 1 }} variant="outlined" error={errors.password && errors.password.message ? true : false} >
                 <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                 <OutlinedInput
-
                   id="outlined-adornment-password password"
                   {...register("password", {
                     required: "Password is required",
@@ -90,7 +106,6 @@ const AuthPage: React.FC = () => {
                       message: 'Password invalid',
                     },
                   })}
-                  // error={(errors.password) ? false : true}
                   type={showPassword ? 'text' : 'password'}
                   placeholder='Password'
                   endAdornment={
@@ -108,9 +123,9 @@ const AuthPage: React.FC = () => {
                 />
                 <FormHelperText error>{errors.password && errors.password.message}</FormHelperText>
               </FormControl>
-              <Button variant="outlined" sx={{ width: 150, height: 45 }} type='submit'>
-                Sing in
-              </Button>
+              <LoadingButton variant="outlined" sx={{ width: 150, height: 45 }} type='submit' loading={progress}>
+                {transalate('SIGN_IN')}
+              </LoadingButton>
             </Box>
           </form>
         </CardContent>

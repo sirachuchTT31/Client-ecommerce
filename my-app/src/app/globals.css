@@ -1,6 +1,9 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 
 :root {
@@ -15,6 +18,10 @@
   }
 }
 
+.slick-arrow slick-next{
+  /* display: none !important ; */
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -26,6 +33,10 @@ body {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   border-radius: 0.5rem;
   padding: 1.5rem;
+}
+
+.swal2-popup {
+  font-family: var(--font-kanit);
 }
 
 @layer utilities {

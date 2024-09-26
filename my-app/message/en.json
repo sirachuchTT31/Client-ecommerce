@@ -1,5 +1,10 @@
 {
     "AUTH": {
-        "SIGN_IN": "SIGN IN"
+        "SIGN_IN": "SIGN IN",
+        "SWAL2": {
+            "SIGN_IN_SUCCESS": "Sign in successfully.",
+            "SIGN_IN_FAIL": "Email or Password is incorrect.",
+            "SIGN_IN_FAIL_SERVER_ERROR": "Unable to connect to the server. Please try again later."
+        }
     }
 }
